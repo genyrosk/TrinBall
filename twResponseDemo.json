@@ -1,0 +1,14 @@
+{
+  "statuses": [
+    {
+      "coordinates": null,
+      "favorited": false,
+      "truncated": false,
+      "created_at": "Mon Sep 24 03:35:21 +0000 2012",
+      "id_str": "250075927172759552",
+      "retweet_count": 0,
+      "in_reply_to_status_id_str": null,
+      "id": 250075927172759552
+    }
+  ]
+}
