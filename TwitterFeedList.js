@@ -14,7 +14,9 @@ var {
 
 var styles = StyleSheet.create({
 	contentContainer:{},
-	scrollView:{},
+	scrollView:{
+		backgroundColor: 'white',
+	},
 
 	container: {
 		marginTop:100,
@@ -49,9 +51,17 @@ var styles = StyleSheet.create({
 		fontSize: 18,
 		textAlign: 'center',
 		color: '#656565',
+		flex: 1,
 		flexDirection: 'row',
 	     padding: 10
 	},
+	listView: {
+		borderWidth: 1,
+		borderColor: 'black',
+		height:1000,
+	},
+	divContainer: {
+	}
 
 });
 
@@ -80,15 +90,14 @@ class TwitterFeedList extends Component {
 	constructor(props){
 		super(props);
 
-		var dataSource = new ListView.DataSource({
-			rowHasChanged	: (r1, r2) => r1 !== r2,
-		});
 		this.state = {
 			searchString: '',
 			isLoading: false,
 			message: '',
-			jsonData: '',
-			data: dataSource.cloneWithRows(['row 1', 'row 2', 'row3', 'row4']),
+			dataSource: new ListView.DataSource({
+				rowHasChanged: (r1, r2) => r1 !== r2,
+			}),
+			//data: dataSource.cloneWithRows(['row 1', 'row 2', 'row3', 'row4']),
 		};
 	}
 
@@ -98,23 +107,10 @@ class TwitterFeedList extends Component {
 		console.log(query);
 		this.setState({ isLoading: true });
 
-		/*
-		fetch(query)
-			.then((response) => response.json())
-			.then((responseData) => {
-		     	this.setState({
-		     		dataSource: this.state.dataSource.cloneWithRows(responseData.statuses),
-		     	});
-		     }).done();
-		*/
 		fetch(query)
 			.then(response => response.json())
 			.then(responseData => {
-				this._handleResponse(responseData);
-				this.setState({
-					message: 'seems like it worked!',
-		     		//dataSource: this.state.dataSource.cloneWithRows(responseData.statuses),
-		     	});
+		     	this._handleResponse(responseData);
 			})
 			.catch(error => 
 				this.setState({
@@ -125,10 +121,12 @@ class TwitterFeedList extends Component {
 
 	}
 
-	_handleResponse(response){
+	_handleResponse(responseData){
 		this.setState({ 
+			message: 'sucessful delivery',
 			isLoading: false,
-			jsonData: response.statuses[0].id_str,
+			dataSource: this.state.dataSource.cloneWithRows(responseData.statuses),
+
 		});
 	}
 /*	
@@ -156,10 +154,31 @@ _handleResponse(responseData){
         
 }*/
 	renderRow(tweet) {
-	 
+	 	
+		var text = tweet.text;
+		var created_at = tweet.created_at;
+		var retweet_count = tweet.retweet_count;
+		var favourites_count = tweet.favourites_count;
+		var screen_name = tweet.user.screen_name;
+		var profile_image_url = tweet.user.profile_image_url;
+		// created_at 
+		// retweet_count 
+		// favourites_count 
+		// user.screen_name 
+		// user.profile_image_url
+
+
+
 		return (
 	     	<View> 
-	     		<Text style={styles.description}> tweet </Text>
+	     		<Text style={styles.description}> 
+	     			{text}
+	     			{created_at}
+	     			{retweet_count}
+	     			{favourites_count}
+	     			{screen_name}
+	     			{profile_image_url}
+	     		</Text>
 	     	</View>
 	  );
 	}
@@ -173,17 +192,25 @@ _handleResponse(responseData){
 	render(){
 		return(
 			<ScrollView
+			  automaticallyAdjustContentInsets={false}
 			  contentContainerStyle={styles.contentContainer}
 			  style={styles.scrollView}>
 
-				{/* Text elements */}
-				<Text style={styles.description} > {this.state.message} </Text>
-				<Text style={styles.description} > {this.state.jsonData} </Text>
-
-			  	{/**/}
+			  	<View>
+					{/* Text elements */}
+					<Text style={styles.description} > Message: {this.state.message} </Text>
+					<Text style={styles.description} > JsonData: {this.state.jsonData} </Text>
+				</View>
+			  	{/*
 				<ListView 
-				dataSource={this.state.data}
-				renderRow={ (rowData) => <Text style={styles.description} >{rowData}</Text> }/>
+				  style={styles.listView}
+				  dataSource={this.state.dataSource}
+				  renderRow={ (rowData) => <Text style={styles.description} >{rowData}</Text> }/>
+*/}
+				  <ListView 
+				  style={styles.listView}
+				  dataSource={this.state.dataSource}
+				  renderRow={ this.renderRow.bind(this) }/>
 				
 			</ScrollView>
 		);
@@ -194,17 +221,6 @@ module.exports = TwitterFeedList;
 
 
 
-/*	
-	
 
-	_handleResponse(response){
-		this.setState({ isLoading: false });
 
-	}
 
-	onSearchPressed(){
-		var query = urlBuilder();
-		this.setState({ message: this.state.message + query });
-		this._executeQuery(query);
-	}
-*/
