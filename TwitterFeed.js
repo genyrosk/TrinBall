@@ -28,7 +28,6 @@ var styles = StyleSheet.create({
 
 
 
-
 class TwitterFeed extends Component {
 	render(){
 		return (

@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react-native');
+var styles2 = require('./src/stylesheets/style.js'); 
 
 var {
 	StyleSheet,
@@ -10,6 +11,7 @@ var {
 	TouchableHighlight,
 	ScrollView,
 	ListView,
+	Image,
 } = React;
 
 var styles = StyleSheet.create({
@@ -17,51 +19,57 @@ var styles = StyleSheet.create({
 	scrollView:{
 		backgroundColor: 'white',
 	},
-
-	container: {
-		marginTop:100,
-		justifyContent: 'center',
-		alignItems: 'center',
-		borderWidth: 1,
-		borderColor: 'black',
-	},
-	content: {
-		fontSize: 20,
-		backgroundColor: 'white',
-	},
-	button: {
-	  	height: 36,
-	  	flex: 1,
-	  	flexDirection: 'row',
-	  	backgroundColor: '#48BBEC',
-	  	borderColor: '#48BBEC',
-	  	borderWidth: 1,
-	  	borderRadius: 8,
-	  	marginBottom: 10,
-	  	alignSelf: 'stretch',
-	  	justifyContent: 'center'
-	},
-	buttonText: {
-	  	fontSize: 18,
-	  	color: 'white',
-	  	alignSelf: 'center'
-	},
-	description: {
-		marginBottom: 20,
-		fontSize: 18,
-		textAlign: 'center',
-		color: '#656565',
-		flex: 1,
-		flexDirection: 'row',
-	     padding: 10
-	},
+	
 	listView: {
 		borderWidth: 1,
 		borderColor: 'black',
-		height:1000,
 	},
-	divContainer: {
-	}
+
+
+	tweet:{	flexDirection: 'row', },
+		tw_img_container:{
+			flex: 1,
+			flexDirection: 'column',
+		},
+			tw_img:{
+				height:200,
+				width:200,
+			},
+		tw_content:{
+			flex: 5,
+			flexDirection: 'column',
+		},
+			tw_details:{
+				flex: 1, 
+				flexDirection: 'row',
+			},
+				tw_user:{
+					flexDirection: 'row'
+				},
+					tw_name:{
+
+					},
+					tw_screen_name:{
+
+					},
+				tw_date:{
+
+				},
+			tw_text_container:{
+
+			},
+				tw_text:{
+
+				},
+			tw_count:{
+
+			},
+				tw_fav:{
+
+				},
+				tw_retweet:{
+
+				},
 
 });
 
@@ -129,57 +137,62 @@ class TwitterFeedList extends Component {
 
 		});
 	}
-/*	
-_handleResponse(responseData){
-	var users = responseData.statuses,
-            dataBlob = {},
-            rowIDs = [],
-            user,
-            userLength,
-            i,
-            j;
 
-        
-            userLength = users.length;
-
-            for(j = 0; j < userLength; j++) {
-                user = users[j].user;
-                this.setState({ message: this.state.message + j });
-                // Add Unique Row ID to RowID Array for Section
-                rowIDs[j] = users[j].id_str;
-
-                // Set Value for unique Section+Row Identifier that will be retrieved by getRowData
-                dataBlob[users[j].id_str] = user;
-            }
-        
-}*/
 	renderRow(tweet) {
 	 	
-		var text = tweet.text;
+
+		var profile_image_url = tweet.user.profile_image_url;
+		var name = tweet.user.name;
+		var screen_name = tweet.user.screen_name;
 		var created_at = tweet.created_at;
+
+		var text = tweet.text;
+
 		var retweet_count = tweet.retweet_count;
 		var favourites_count = tweet.favourites_count;
-		var screen_name = tweet.user.screen_name;
-		var profile_image_url = tweet.user.profile_image_url;
-		// created_at 
-		// retweet_count 
-		// favourites_count 
-		// user.screen_name 
-		// user.profile_image_url
-
+		var created_at = tweet.user.created_at;
 
 
 		return (
-	     	<View> 
-	     		<Text style={styles.description}> 
-	     			{text}
-	     			{created_at}
-	     			{retweet_count}
-	     			{favourites_count}
-	     			{screen_name}
-	     			{profile_image_url}
-	     		</Text>
-	     	</View>
+
+
+	     	<View style={styles.tweet}>
+
+	     		{/* User profile image */}
+	     		<View style={styles.tw_img_container}>
+	     			<Image
+				        style={styles.logo}
+				        source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}
+				    />
+		     	</View>
+		     	<View style={styles.tw_content}>
+
+
+		     		{/* User details + date */}
+		     		<View style={styles.tw_details}>
+			    		<View style={styles.tw_user}>
+		     				<Text style={styles.tw_name}>{name}</Text>
+		     				<Text style={styles.tw_screen_name}>{screen_name}</Text>
+		     			</View>
+		     			<Text style={styles.tw_date}>{text}</Text>
+		     		</View>
+
+		     		{/* Tweet text */}
+		     		<View style={styles.tw_text_container}>
+		     			<Text></Text>
+		     		</View>
+
+		     		{/* retweets + favourites  counters*/}
+		     		<View style={styles.tw_count}>
+		     			<View style={styles.tw_fav}>
+		     				<Text></Text>
+		     			</View>
+		     			<View style={styles.tw_retweet}>
+			     			<Text></Text>
+			     		</View>
+		     		</View>
+	     		</View>
+     		</View>
 	  );
 	}
 
@@ -196,11 +209,13 @@ _handleResponse(responseData){
 			  contentContainerStyle={styles.contentContainer}
 			  style={styles.scrollView}>
 
+				{/*
 			  	<View>
-					{/* Text elements */}
+					 Text elements 
 					<Text style={styles.description} > Message: {this.state.message} </Text>
 					<Text style={styles.description} > JsonData: {this.state.jsonData} </Text>
-				</View>
+				</View>*/}
+
 			  	{/*
 				<ListView 
 				  style={styles.listView}
@@ -208,6 +223,7 @@ _handleResponse(responseData){
 				  renderRow={ (rowData) => <Text style={styles.description} >{rowData}</Text> }/>
 */}
 				  <ListView 
+				  automaticallyAdjustContentInsets={false}
 				  style={styles.listView}
 				  dataSource={this.state.dataSource}
 				  renderRow={ this.renderRow.bind(this) }/>
