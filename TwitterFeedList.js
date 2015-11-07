@@ -2,6 +2,7 @@
 
 var React = require('react-native');
 var styles2 = require('./src/stylesheets/style.js'); 
+var DateFormat = require('./src/plugins/dateFormat.js');
 
 var {
 	StyleSheet,
@@ -19,7 +20,7 @@ var styles = StyleSheet.create({
 	scrollView:{
 		backgroundColor: 'white',
 	},
-	
+
 	listView: {
 		borderWidth: 1,
 		borderColor: 'black',
@@ -32,8 +33,8 @@ var styles = StyleSheet.create({
 			flexDirection: 'column',
 		},
 			tw_img:{
-				height:200,
-				width:200,
+				height:100,
+				width:100,
 			},
 		tw_content:{
 			flex: 5,
@@ -92,6 +93,19 @@ function urlBuilder(){
 	return url ;
 }
 
+function dateBuilder(date){
+
+	var now = new Date();
+	console.log(now.date);
+
+	
+
+
+
+	date = new Date(date).format('j/m');
+
+	return date;
+}
 
 class TwitterFeedList extends Component {
 
@@ -144,13 +158,21 @@ class TwitterFeedList extends Component {
 		var profile_image_url = tweet.user.profile_image_url;
 		var name = tweet.user.name;
 		var screen_name = tweet.user.screen_name;
-		var created_at = tweet.created_at;
+		var created_at = tweet.user.created_at;
+
+		//var myDate = new Date(created_at).format('j/m');
+		console.log(created_at);
+		var myDate = new Date(created_at).getTime();
+		console.log(myDate);
+
+		var now = new Date().getTime();
+		console.log(now);
+
 
 		var text = tweet.text;
 
 		var retweet_count = tweet.retweet_count;
 		var favourites_count = tweet.favourites_count;
-		var created_at = tweet.user.created_at;
 
 
 		return (
@@ -161,8 +183,8 @@ class TwitterFeedList extends Component {
 	     		{/* User profile image */}
 	     		<View style={styles.tw_img_container}>
 	     			<Image
-				        style={styles.logo}
-				        source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}
+				        style={styles.tw_img}
+				        source={{uri: profile_image_url}}
 				    />
 		     	</View>
 		     	<View style={styles.tw_content}>
@@ -171,24 +193,27 @@ class TwitterFeedList extends Component {
 		     		{/* User details + date */}
 		     		<View style={styles.tw_details}>
 			    		<View style={styles.tw_user}>
-		     				<Text style={styles.tw_name}>{name}</Text>
-		     				<Text style={styles.tw_screen_name}>{screen_name}</Text>
+		     				<Text style={styles.tw_name}>
+		     					{name}</Text>
+		     				<Text style={styles.tw_screen_name}>
+		     					@{screen_name}</Text>
 		     			</View>
-		     			<Text style={styles.tw_date}>{text}</Text>
+		     			<Text style={styles.tw_date}>
+		     				{created_at}</Text>
 		     		</View>
 
 		     		{/* Tweet text */}
 		     		<View style={styles.tw_text_container}>
-		     			<Text></Text>
+		     			<Text>{text}</Text>
 		     		</View>
 
 		     		{/* retweets + favourites  counters*/}
 		     		<View style={styles.tw_count}>
 		     			<View style={styles.tw_fav}>
-		     				<Text></Text>
+		     				<Text>favourites_count</Text>
 		     			</View>
 		     			<View style={styles.tw_retweet}>
-			     			<Text></Text>
+			     			<Text>retweet_count</Text>
 			     		</View>
 		     		</View>
 	     		</View>
@@ -205,15 +230,17 @@ class TwitterFeedList extends Component {
 	render(){
 		return(
 			<ScrollView
-			  automaticallyAdjustContentInsets={false}
+			  automaticallyAdjustContentInsets={true}
+			  showsHorizontalScrollIndicator={false}
 			  contentContainerStyle={styles.contentContainer}
 			  style={styles.scrollView}>
 
 				{/*
 			  	<View>
-					 Text elements 
+					
 					<Text style={styles.description} > Message: {this.state.message} </Text>
 					<Text style={styles.description} > JsonData: {this.state.jsonData} </Text>
+
 				</View>*/}
 
 			  	{/*
